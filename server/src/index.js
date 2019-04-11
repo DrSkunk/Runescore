@@ -3,8 +3,6 @@ import admin from './firebase';
 
 const db = admin.firestore();
 
-main();
-
 async function main() {
   try {
     ['wh1tebird', 'zamorakyan'].forEach(async username => {
@@ -18,5 +16,4 @@ async function main() {
     console.error(e);
   }
 }
-
-setInterval(main, 10 * 60 * 1000);
+main();
