@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node build/index.js",
     "build": "yarn clean ; babel ./src --out-dir ./build ; cp ./src/serviceAccountKey.json ./build",
-    "clean": "rimraf ./sdist",
+    "clean": "rimraf ./dist",
     "debug": "nodemon --exec babel-node src/index.js"
   },
   "devDependencies": {
