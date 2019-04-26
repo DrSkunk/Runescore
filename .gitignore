@@ -87,7 +87,7 @@ typings/
 .DS_Store
 
 # Transpiled code
-server/dist
+server/build
 
 # serviceAccountKey for FireBase
 serviceAccountKey.json
