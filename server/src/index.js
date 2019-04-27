@@ -5,44 +5,48 @@ const db = admin.firestore();
 
 async function main() {
   try {
-    const wh1tebirdSkills = (await rsapi.rs.hiscores.player('wh1tebird'))
-      .skills;
-    const zamorakyanSkills = (await rsapi.rs.hiscores.player('zamorakyan'))
-      .skills;
+    const playerNames = [];
+    (await db.collection('playerNames').get()).forEach(doc => {
+      playerNames.push(doc.id);
+    });
+
+    console.log('Fetching skills data for players', playerNames);
+    const skills = await Promise.all(
+      playerNames.map(
+        async playerName => (await rsapi.rs.hiscores.player(playerName)).skills
+      )
+    );
     const timestamp = admin.firestore.Timestamp.fromDate(new Date());
 
-    Object.keys(wh1tebirdSkills).forEach(skill => {
-      const stats = {
-        wh1tebird: {
-          exp: wh1tebirdSkills[skill].exp,
-          level: wh1tebirdSkills[skill].level,
-          rank: wh1tebirdSkills[skill].rank
-        },
-        zamorakyan: {
-          exp: zamorakyanSkills[skill].exp,
-          level: zamorakyanSkills[skill].level,
-          rank: zamorakyanSkills[skill].rank
-        },
-        timestamp
-      };
+    Object.keys(skills[0]).forEach(skill => {
+      const stats = { timestamp };
+      const currentStats = {};
+      for (
+        let playerIndex = 0;
+        playerIndex < playerNames.length;
+        playerIndex++
+      ) {
+        const playerName = playerNames[playerIndex];
+
+        stats[playerName] = {
+          exp: skills[playerIndex][skill].exp,
+          level: skills[playerIndex][skill].level,
+          rank: skills[playerIndex][skill].rank
+        };
+
+        currentStats[playerName] = skills[playerIndex][skill];
+      }
       db.collection('players')
         .doc(skill)
-        .set(
-          {
-            wh1tebird: wh1tebirdSkills[skill].level,
-            zamorakyan: zamorakyanSkills[skill].level
-          },
-          { merge: true }
-        );
+        .set(currentStats, { merge: true });
       db.collection('players')
         .doc(skill)
         .collection('stats')
         .add(stats);
     });
-
     console.log('Added entry');
   } catch (e) {
-    console.error('Error fetching data');
+    console.error('Error processing data');
     console.error(e);
   }
 }

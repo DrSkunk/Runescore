@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node build/index.js",
-    "build": "yarn clean ; babel ./src --out-dir ./build ; cp ./src/serviceAccountKey.json ./build",
-    "clean": "rimraf ./dist",
+    "build": "yarn clean ; babel ./src --out-dir ./build --source-maps; cp ./src/serviceAccountKey.json ./build",
+    "clean": "rimraf ./build",
     "debug": "nodemon --exec babel-node src/index.js"
   },
   "devDependencies": {
