@@ -36,10 +36,10 @@ async function main() {
 
         currentStats[playerName] = skills[playerIndex][skill];
       }
-      db.collection('players')
+      db.collection('stats')
         .doc(skill)
         .set(currentStats, { merge: true });
-      db.collection('players')
+      db.collection('stats')
         .doc(skill)
         .collection('stats')
         .add(stats);
