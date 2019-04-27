@@ -4,6 +4,7 @@ import firebase from '@firebase/app';
 import '@firebase/firestore';
 import { FirestoreProvider } from 'react-firestore';
 
+import './index.css';
 import App from './App';
 
 const config = {
